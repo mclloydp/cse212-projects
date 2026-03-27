@@ -59,7 +59,15 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+    
+        if (_mazeMap.TryGetValue(((_currX, _currY)), out bool[] directions) && directions[3])
+        {
+            _currY++;
+        }
+        else
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     public string GetStatus()
