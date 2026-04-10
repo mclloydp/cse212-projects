@@ -161,23 +161,40 @@ public static class Recursion
         WildcardBinary(withOne, results);
     }
 
-    /// <summary>
-    /// Use recursion to insert all paths that start at (0,0) and end at the
-    /// 'end' square into the results list.
-    /// </summary>
-    public static void SolveMaze(List<string> results, Maze maze, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
+/// <summary>
+/// Use recursion to insert all paths that start at (0,0) and end at the
+/// 'end' square into the results list.
+/// </summary>
+public static void SolveMaze(List<string> results, Maze maze, int x = 0, int y = 0, List<ValueTuple<int, int>>? currPath = null)
+{
+    // Initialize path on first call
+    if (currPath == null)
     {
-        // If this is the first time running the function, then we need
-        // to initialize the currPath list.
-        if (currPath == null) {
-            currPath = new List<ValueTuple<int, int>>();
-        }
-        
-        // currPath.Add((1,2)); // Use this syntax to add to the current path
-
-        // TODO Start Problem 5
-        // ADD CODE HERE
-
-        // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
+        currPath = new List<ValueTuple<int, int>>();
     }
+
+    // Check if move is valid
+    if (!maze.IsValidMove(currPath, x, y))
+        return;
+
+    // Add current position to path
+    currPath.Add((x, y));
+
+    // Check if we reached the end
+    if (maze.IsEnd(x, y))
+    {
+        results.Add(currPath.AsString());
+    }
+    else
+    {
+        // Explore all directions
+        SolveMaze(results, maze, x + 1, y, currPath); // Right
+        SolveMaze(results, maze, x - 1, y, currPath); // Left
+        SolveMaze(results, maze, x, y + 1, currPath); // Down
+        SolveMaze(results, maze, x, y - 1, currPath); // Up
+    }
+
+    // Backtrack (remove last position)
+    currPath.RemoveAt(currPath.Count - 1);
+}
 }
